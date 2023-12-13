@@ -1,9 +1,9 @@
 import streamlit as st
 import re
-import nltk
 import joblib
 import numpy as np
-
+import nltk
+nltk.download('wordnet')
 # Download NLTK resources
 nltk.download('stopwords')
 
