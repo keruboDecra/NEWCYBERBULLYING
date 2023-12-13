@@ -8,7 +8,7 @@ from nltk.stem import WordNetLemmatizer
 # Load SVM model and TF-IDF vectorizer
 model_path = 'svm_model.joblib'  # Adjust the path if necessary
 model = joblib.load(model_path)
-vectorizer_path = 'tfidf_vectorizer.joblib'  # Adjust the path if necessary
+vectorizer_path = 'tfidf_vectorizer'  # Adjust the path if necessary
 vectorizer = joblib.load(vectorizer_path)
 
 # Function for text preprocessing
