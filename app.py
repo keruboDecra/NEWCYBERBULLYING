@@ -35,7 +35,7 @@ def predict_cyberbullying(text):
         preprocessed_text = preprocess_text(text)
 
         # Transform the preprocessed text using the loaded vectorizer
-        text_tfidf = tfidf_vectorizer.transform([preprocessed_text])
+        text_tfidf = TfidfVectorizer.transform([preprocessed_text])
 
         # Make prediction
         prediction = model.predict(text_tfidf)
