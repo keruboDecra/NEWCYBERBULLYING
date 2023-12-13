@@ -13,7 +13,11 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 
-from nltk.stem import WordNetLemmatizer
+
+
+# Load the SGD classifier and TF-IDF vectorizer
+sgd_classifier = joblib.load('sgd_classifier_model.joblib')
+tfidf_vectorizer = joblib.load('tfidf_vectorizer.joblib')
 
 # Function to clean and preprocess text
 def preprocess_text(text):
@@ -24,25 +28,21 @@ def preprocess_text(text):
     tokens = [lemmatizer.lemmatize(word) for word in text.split() if word not in stop_words]
     return ' '.join(tokens)
 
-# Function to predict using the loaded model
-def predict_cyberbullying(text):
+# Function for binary cyberbullying detection
+def binary_cyberbullying_detection(text):
     try:
-        # Load the model and vectorizer
-        model = joblib.load('svm_model.joblib')
-        vectorizer = joblib.load('tfidf_vectorizer.joblib')
-
         # Preprocess the input text
         preprocessed_text = preprocess_text(text)
 
         # Transform the preprocessed text using the loaded vectorizer
-        text_tfidf = vectorizer.transform([preprocessed_text])
+        text_tfidf = tfidf_vectorizer.transform([preprocessed_text])
 
         # Make prediction
-        prediction = model.predict(text_tfidf)
+        prediction = sgd_classifier.predict(text_tfidf)
 
         return prediction[0]
     except Exception as e:
-        st.error(f"Error loading or using the model: {e}")
+        st.error(f"Error: {e}")
         return None
 
 # Streamlit UI
@@ -54,8 +54,11 @@ user_input = st.text_area("Enter a text:", "")
 # Check if the user has entered any text
 if user_input:
     # Make prediction
-    prediction = predict_cyberbullying(user_input)
+    try:
+        prediction = binary_cyberbullying_detection(user_input)
 
-    # Display the prediction
-    if prediction is not None:
-        st.write(f"Prediction: {'Cyberbullying' if prediction == 1 else 'Not Cyberbullying'}")
+        # Display the prediction
+        if prediction is not None:
+            st.write(f"Prediction: {'Cyberbullying' if prediction == 1 else 'Not Cyberbullying'}")
+    except Exception as e:
+        st.error(f"Prediction error: {e}")
