@@ -29,7 +29,7 @@ def predict_cyberbullying(text):
     try:
         # Load the model and vectorizer
         model = joblib.load('svm_model.joblib')
-        vectorizer = joblib.load('tfidf_vectorizer')
+        vectorizer = joblib.load('tfidf_vectorizer.joblib')
 
         # Preprocess the input text
         preprocessed_text = preprocess_text(text)
