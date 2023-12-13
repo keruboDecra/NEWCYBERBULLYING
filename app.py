@@ -15,6 +15,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 
+
 # Load the SGD classifier and TF-IDF vectorizer
 sgd_classifier = joblib.load('sgd_classifier_model.joblib')
 tfidf_vectorizer = joblib.load('tfidf_vectorizer.joblib')
@@ -29,16 +30,16 @@ def preprocess_text(text):
     return ' '.join(tokens)
 
 # Function for binary cyberbullying detection
-def binary_cyberbullying_detection(text):
+def binary_cyberbullying_detection(text, vectorizer, model):
     try:
         # Preprocess the input text
         preprocessed_text = preprocess_text(text)
 
         # Transform the preprocessed text using the loaded vectorizer
-        text_tfidf = tfidf_vectorizer.transform([preprocessed_text])
+        text_tfidf = vectorizer.transform([preprocessed_text])
 
         # Make prediction
-        prediction = sgd_classifier.predict(text_tfidf)
+        prediction = model.predict(text_tfidf)
 
         return prediction[0]
     except Exception as e:
@@ -54,11 +55,8 @@ user_input = st.text_area("Enter a text:", "")
 # Check if the user has entered any text
 if user_input:
     # Make prediction
-    try:
-        prediction = binary_cyberbullying_detection(user_input)
+    prediction = binary_cyberbullying_detection(user_input, tfidf_vectorizer, sgd_classifier)
 
-        # Display the prediction
-        if prediction is not None:
-            st.write(f"Prediction: {'Cyberbullying' if prediction == 1 else 'Not Cyberbullying'}")
-    except Exception as e:
-        st.error(f"Prediction error: {e}")
+    # Display the prediction
+    if prediction is not None:
+        st.write(f"Prediction: {'Cyberbullying' if prediction == 1 else 'Not Cyberbullying'}")
