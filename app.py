@@ -1,17 +1,21 @@
 import streamlit as st
-import joblib
-import pandas as pd
 import re
+import nltk
+import joblib
+import numpy as np
+
+# Download NLTK resources
+nltk.download('stopwords')
+
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-# Load SVM model and TF-IDF vectorizer
-model_path = 'svm_model.joblib'  # Adjust the path if necessary
-model = joblib.load(model_path)
-vectorizer_path = 'tfidf_vectorizer'  # Adjust the path if necessary
-vectorizer = joblib.load(vectorizer_path)
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.ensemble import RandomForestClassifier
 
-# Function for text preprocessing
+from nltk.stem import WordNetLemmatizer
+
+# Function to clean and preprocess text
 def preprocess_text(text):
     text = re.sub(r'http\S+|www\S+|@\S+|#\S+|[^A-Za-z\s]', '', text)
     text = text.lower()
@@ -23,6 +27,10 @@ def preprocess_text(text):
 # Function to predict using the loaded model
 def predict_cyberbullying(text):
     try:
+        # Load the model and vectorizer
+        model = joblib.load('random_forest_model.joblib')
+        vectorizer = joblib.load('tfidf_vectorizer.joblib')
+
         # Preprocess the input text
         preprocessed_text = preprocess_text(text)
 
